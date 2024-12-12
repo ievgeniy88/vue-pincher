@@ -1,0 +1,82 @@
+{
+  "name": "vue-pincher",
+  "author": {
+    "name": "Evgenii Ilin",
+    "email": "ievgeniy88@gmail.com"
+  },
+  "description": "Vue 3 image cropper component",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ievgeniy88/vue-pincher/issues"
+  },
+  "homepage": "https://github.com/ievgeniy88/vue-pincher#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ievgeniy88/vue-pincher.git"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "image cropper",
+    "picture cropper",
+    "photo cropper",
+    "image cropper",
+    "cropper",
+    "crop",
+    "pan",
+    "zoom",
+    "pinch"
+  ],
+  "version": "0.1.1",
+  "private": false,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "module": "./dist/vue-pincher.js",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/vue-pincher.js"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint ./",
+    "build": "vite build && vue-tsc -p tsconfig.lib.json",
+    "prepublishOnly": "npm run build",
+    "test": "vitest run",
+    "test:dev": "vitest"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.2",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/eslint-config-typescript": "^14.1.4",
+    "@vue/test-utils": "^2.4.6",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-json": "^4.0.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "globals": "^15.13.0",
+    "happy-dom": "^15.11.7",
+    "husky": "^9.1.7",
+    "prettier": "^3.4.2",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.18.1",
+    "vite": "^6.0.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^2.1.8",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.1.10"
+  }
+}
