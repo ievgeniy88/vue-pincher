@@ -11,6 +11,7 @@ describe("Image manipulator", () => {
     offsetY: number;
     scale: number;
   };
+  let trimTo: Region | undefined;
   let attention: Region[];
   let manipulator: ImageManipulator;
 
@@ -38,9 +39,10 @@ describe("Image manipulator", () => {
     } as unknown as ImageBitmap;
 
     state = { angle: 0, offsetX: 0, offsetY: 0, scale: 0 };
+    trimTo = undefined;
     attention = [];
 
-    manipulator = new ImageManipulator(ctx, image, state, attention);
+    manipulator = new ImageManipulator(ctx, image, state, trimTo, attention);
   });
 
   it("initializes with correct canvas size based on device pixel ratio", () => {
@@ -55,6 +57,18 @@ describe("Image manipulator", () => {
       266.66666666666663,
       200,
     );
+  });
+
+  it("resets with the correct region when trimTo is set", async () => {
+    trimTo = { x: 10, y: 10, width: 300, height: 300 };
+    manipulator.trimTo = trimTo;
+
+    vi.spyOn(manipulator, "showRegion");
+    manipulator.reset();
+
+    await flushPromises();
+
+    expect(manipulator.showRegion).toHaveBeenCalledWith(trimTo, true);
   });
 
   it("resets with the correct region when attention is set", async () => {

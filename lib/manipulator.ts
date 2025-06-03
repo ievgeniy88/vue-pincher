@@ -27,6 +27,7 @@ export class ImageManipulator {
     private _ctx: CanvasRenderingContext2D,
     private _image: ImageBitmap,
     private _state: State,
+    private _trimTo?: Region,
     private _attention?: Region[],
   ) {
     this.adjustSize();
@@ -60,9 +61,17 @@ export class ImageManipulator {
     this.reset();
   }
 
+  public set trimTo(value: Region | undefined) {
+    this._trimTo = value;
+    this.reset();
+  }
+
+  // TODO: Implement using of trimming and attention simultaneously
   public reset() {
     nextTick(() => {
-      if (this._attention && this._attention.length > 0) {
+      if (this._trimTo) {
+        this.showRegion(this._trimTo, true);
+      } else if (this._attention && this._attention.length > 0) {
         this.showRegion(
           // TODO: Implement using of multiple attentions
           applyAttention(

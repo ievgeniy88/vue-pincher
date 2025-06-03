@@ -24,11 +24,13 @@ const {
   image,
   readonly = false,
   showGrid = false,
+  trimTo = undefined,
   attention = [],
 } = defineProps<{
   image: ImageBitmap;
   readonly?: boolean;
   showGrid?: boolean;
+  trimTo?: Region;
   attention?: Region[];
 }>();
 
@@ -60,7 +62,13 @@ onMounted(() => {
 
   if (!context) return;
 
-  manipulator = new ImageManipulator(context, image, settings.value, attention);
+  manipulator = new ImageManipulator(
+    context,
+    image,
+    settings.value,
+    trimTo,
+    attention,
+  );
 
   if (!readonly) {
     handler = new InputHandler(manipulator);
@@ -74,6 +82,11 @@ onUnmounted(() => {
 watch(
   () => image,
   (value) => (manipulator.image = value),
+);
+
+watch(
+  () => trimTo,
+  (value) => (manipulator.trimTo = value),
 );
 
 watch(
