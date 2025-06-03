@@ -1,9 +1,9 @@
-export function crop(
+export function applyAttention(
   attention: Region,
   image: Size,
   target: Size,
   ruleOfThirds = false,
-) {
+): Region {
   const center = {
     x: attention.x + attention.width / 2,
     y: attention.y + attention.height / 2,

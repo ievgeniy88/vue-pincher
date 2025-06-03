@@ -1,9 +1,15 @@
+import { nextTick } from "vue";
 import type { Region } from "./crop";
-import { coerceAngle, convertDegreeToRadian, crop, fill, fit } from "./crop";
+import {
+  coerceAngle,
+  convertDegreeToRadian,
+  applyAttention,
+  fill,
+  fit,
+} from "./crop";
 
 export class ImageManipulator {
   private resizeObserver: ResizeObserver;
-  private resetRequested = false;
 
   // Actual width and height of the canvas
   private clientWidth = 0;
@@ -21,7 +27,7 @@ export class ImageManipulator {
     private _ctx: CanvasRenderingContext2D,
     private _image: ImageBitmap,
     private _state: State,
-    private _attention: Region[] = [],
+    private _attention?: Region[],
   ) {
     this.adjustSize();
 
@@ -30,11 +36,7 @@ export class ImageManipulator {
 
       this.adjustSize();
 
-      if (this.resetRequested) {
-        this.reset();
-      } else {
-        this.redraw();
-      }
+      this.redraw();
     });
     this.resizeObserver.observe(_ctx.canvas);
 
@@ -55,40 +57,39 @@ export class ImageManipulator {
 
   public set attention(value: Region[]) {
     this._attention = value;
+    this.reset();
   }
 
-  public reset(lazy = false) {
-    if (lazy) {
-      this.resetRequested = true;
-      return;
-    }
+  public reset() {
+    nextTick(() => {
+      if (this._attention && this._attention.length > 0) {
+        this.showRegion(
+          // TODO: Implement using of multiple attentions
+          applyAttention(
+            this._attention[0],
+            this._image,
+            { width: this.canvasWidth, height: this.canvasHeight },
+            false,
+          ),
+        );
+      } else {
+        const radian = convertDegreeToRadian(this._state.angle);
+        const absCos = Math.abs(Math.cos(radian));
+        const absSin = Math.abs(Math.sin(radian));
 
-    if (this._attention.length === 1) {
-      this.showRegion(
-        crop(
-          this._attention[0],
-          this._image,
-          { width: this.canvasWidth, height: this.canvasHeight },
-          true,
-        ),
-      );
-    } else {
-      const radian = convertDegreeToRadian(this._state.angle);
-      const absCos = Math.abs(Math.cos(radian));
-      const absSin = Math.abs(Math.sin(radian));
+        const rotatedWidth = this.fitWidth * absCos + this.fitHeight * absSin;
+        const rotatedHeight = this.fitHeight * absCos + this.fitWidth * absSin;
 
-      const rotatedWidth = this.fitWidth * absCos + this.fitHeight * absSin;
-      const rotatedHeight = this.fitHeight * absCos + this.fitWidth * absSin;
-
-      this.manipulate({
-        scale: fill(
-          { width: rotatedWidth, height: rotatedHeight },
-          { width: this.canvasWidth, height: this.canvasHeight },
-        ),
-        offsetX: 0,
-        offsetY: 0,
-      });
-    }
+        this.manipulate({
+          scale: fill(
+            { width: rotatedWidth, height: rotatedHeight },
+            { width: this.canvasWidth, height: this.canvasHeight },
+          ),
+          offsetX: 0,
+          offsetY: 0,
+        });
+      }
+    });
   }
 
   public manipulate(data: Manipulation) {
@@ -226,25 +227,25 @@ export class ImageManipulator {
     }
   }
 
-  public showRegion(region: Region) {
-    const fitResult = fit(this._image, {
-      width: this.canvasWidth,
-      height: this.canvasHeight,
-    });
-    const scale = fit(region, {
+  public showRegion(region: Region, fillTarget = false) {
+    const fitImage = fit(this._image, {
       width: this.canvasWidth,
       height: this.canvasHeight,
     });
 
-    const offsetX =
-      (this._image.width * scale - this.canvasWidth - 2 * region.x * scale) /
-      (2 * this.canvasWidth);
-    const offsetY =
-      (this._image.height * scale - this.canvasHeight - 2 * region.y * scale) /
-      (2 * this.canvasHeight);
+    const scale = (fillTarget ? fill : fit)(region, {
+      width: this.canvasWidth,
+      height: this.canvasHeight,
+    });
+
+    const cx = region.x + region.width / 2;
+    const cy = region.y + region.height / 2;
+
+    const offsetX = ((this._image.width / 2 - cx) * scale) / this.canvasWidth;
+    const offsetY = ((this._image.height / 2 - cy) * scale) / this.canvasHeight;
 
     this.manipulate({
-      scale: scale / fitResult,
+      scale: scale / fitImage,
       offsetX,
       offsetY,
     });

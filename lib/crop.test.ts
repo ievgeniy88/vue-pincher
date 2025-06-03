@@ -2,7 +2,7 @@ import { expect, describe, it } from "vitest";
 import {
   coerceAngle,
   convertDegreeToRadian,
-  crop,
+  applyAttention,
   fill,
   fit,
   getDistance,
@@ -375,7 +375,7 @@ describe("crop function", () => {
   ])(
     "should crop image of size %o to fill target of of size %o according to attention information %o",
     (image, target, attention, expected, ruleOfThirds = false) => {
-      const result = crop(attention, image, target, ruleOfThirds);
+      const result = applyAttention(attention, image, target, ruleOfThirds);
 
       expect(result.x).toBeCloseTo(expected.x);
       expect(result.y).toBeCloseTo(expected.y);

@@ -57,14 +57,21 @@ describe("Image manipulator", () => {
     );
   });
 
-  it("resets with the correct region when attention is set to a single region", () => {
+  it("resets with the correct region when attention is set", async () => {
     attention = [{ x: 10, y: 10, width: 100, height: 100 }];
     manipulator.attention = attention;
 
     vi.spyOn(manipulator, "showRegion");
     manipulator.reset();
 
-    expect(manipulator.showRegion).toHaveBeenCalledWith(expect.any(Object));
+    await flushPromises();
+
+    expect(manipulator.showRegion).toHaveBeenCalledWith({
+      height: 600,
+      width: 600,
+      x: -240,
+      y: -240,
+    });
   });
 
   it("adjusts scale and offsets correctly in the manipulate method", () => {
@@ -111,18 +118,13 @@ describe("Image manipulator", () => {
     expect(region.y).toBeDefined();
   });
 
-  // it("handles resizing of the canvas when the resizeObserver triggers", () => {
-  //   manipulator["resizeObserver"].callback([
-  //     { contentRect: { width: 500, height: 500 } } as ResizeObserverEntry,
-  //   ]);
-
-  //   expect(manipulator["canvasWidth"]).toBeGreaterThan(0);
-  //   expect(manipulator["canvasHeight"]).toBeGreaterThan(0);
-  // });
-
   it("disconnects the resizeObserver on close", () => {
     vi.spyOn(manipulator["resizeObserver"], "disconnect");
     manipulator.close();
     expect(manipulator["resizeObserver"].disconnect).toHaveBeenCalled();
   });
 });
+
+function flushPromises() {
+  return new Promise((resolve) => setImmediate(resolve));
+}

@@ -45,7 +45,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "lint": "eslint ./",
     "build": "vite build && vue-tsc -p tsconfig.lib.json",
     "prepublishOnly": "npm run build",

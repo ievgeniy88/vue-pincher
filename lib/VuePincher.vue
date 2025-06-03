@@ -60,7 +60,7 @@ onMounted(() => {
 
   if (!context) return;
 
-  manipulator = new ImageManipulator(context, image, settings.value);
+  manipulator = new ImageManipulator(context, image, settings.value, attention);
 
   if (!readonly) {
     handler = new InputHandler(manipulator);
@@ -85,8 +85,11 @@ watch(settings, (value) => (manipulator.state = value), {
   deep: true,
 });
 
+/**
+ * Resets image view to default state.
+ */
 function reset() {
-  manipulator.reset(true);
+  manipulator.reset();
 }
 
 function rotate(delta: number) {
