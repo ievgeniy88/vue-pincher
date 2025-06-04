@@ -1,22 +1,26 @@
 import globals from "globals";
+import { defineConfig, globalIgnores } from "eslint/config";
 import js from "@eslint/js";
-import ts from "typescript-eslint";
+import tseslint from "typescript-eslint";
 import vue from "eslint-plugin-vue";
 import vueTsEslintConfig from "@vue/eslint-config-typescript";
 import json from "eslint-plugin-json";
 import prettier from "eslint-plugin-prettier/recommended";
+import eslintPluginUnicorn from "eslint-plugin-unicorn";
 
-export default [
+export default defineConfig([
+  globalIgnores(["node_modules/", "dist/"]),
+  { files: ["**/*.{js,mjs,cjs,ts,vue}"] },
   {
-    /**
-     * ESLint requires "ignores" key to be the only one in this object
-     */
-    ignores: ["dist", "node_modules"],
+    files: ["**/*.{js,mjs,cjs,ts,vue}"],
+    plugins: { js },
+    extends: ["js/recommended"],
   },
-
-  js.configs.recommended,
-  ...ts.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
+  // TODO: Migrate to @stylistic/eslint-plugin
+  tseslint.configs.stylisticTypeChecked,
   ...vue.configs["flat/recommended"],
+  eslintPluginUnicorn.configs.recommended,
   prettier,
 
   // https://github.com/vuejs/eslint-config-typescript
@@ -25,16 +29,21 @@ export default [
     // Supports all the configurations in
     // https://typescript-eslint.io/users/configs#recommended-configurations
     extends: [
-      // By default, only the recommended rules are enabled.
-      "recommended",
-      // You can also manually enable the stylistic rules.
-      "stylistic",
+      "recommendedTypeChecked",
+      "stylisticTypeChecked",
 
       // Other utility configurations, such as 'eslintRecommended', (note that it's in camelCase)
       // are also extendable here. But we don't recommend using them directly.
     ],
   }),
-
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
   {
     languageOptions: {
       ecmaVersion: "latest",
@@ -81,7 +90,21 @@ export default [
         "error",
         { prefer: "type-imports" },
       ],
+
+      "unicorn/better-regex": "error",
+      // TODO: Enable this rule after fixing all the issues
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-global-this": "off",
+      "unicorn/prefer-add-event-listener": "off",
+      "unicorn/no-null": "off",
+      "unicorn/no-useless-undefined": "off",
+      "unicorn/numeric-separators-style": "off",
+      "unicorn/prefer-node-protocol": "off",
     },
+  },
+  {
+    files: ["**/*.{js,mjs,cjs,json,jsonc,json5}"],
+    extends: [tseslint.configs.disableTypeChecked],
   },
   {
     files: ["**/*.json"],
@@ -90,4 +113,4 @@ export default [
       "json/*": ["error", { allowComments: true }],
     },
   },
-];
+]);

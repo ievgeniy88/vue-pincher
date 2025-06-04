@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import VuePincher from "./VuePincher.vue";
+import VuePincher from "./vue-pincher.vue";
 
 describe("VuePincher component", () => {
   let wrapper: ReturnType<typeof mount>;

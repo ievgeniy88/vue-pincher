@@ -75,7 +75,7 @@ export function getDistance(evt: TouchEvent) {
   const deltaX = touch2.clientX - touch1.clientX;
   const deltaY = touch2.clientY - touch1.clientY;
 
-  return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  return Math.hypot(deltaX, deltaY);
 }
 
 export interface Region {

@@ -2,7 +2,7 @@ import { getDistance, getMidPoint } from "./crop";
 import type { ImageManipulator } from "./manipulator";
 
 export class InputHandler {
-  constructor(private manipulator: ImageManipulator) {}
+  constructor(private readonly manipulator: ImageManipulator) {}
 
   public wheel(evt: WheelEvent) {
     this.manipulator.manipulate({

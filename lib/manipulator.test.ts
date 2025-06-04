@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { describe, it, beforeEach, expect, vi } from "vitest";
 import type { Region } from "./crop";
 import { ImageManipulator } from "./manipulator";
@@ -19,7 +20,7 @@ describe("Image manipulator", () => {
     value: 2,
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks();
 
     ctx = {
@@ -133,9 +134,11 @@ describe("Image manipulator", () => {
   });
 
   it("disconnects the resizeObserver on close", () => {
-    vi.spyOn(manipulator["resizeObserver"], "disconnect");
+    // @ts-expect-error: For testing purposes only
+    vi.spyOn(manipulator.resizeObserver, "disconnect");
     manipulator.close();
-    expect(manipulator["resizeObserver"].disconnect).toHaveBeenCalled();
+    // @ts-expect-error: For testing purposes only
+    expect(manipulator.resizeObserver.disconnect).toHaveBeenCalled();
   });
 });
 

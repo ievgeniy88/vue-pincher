@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, useTemplateRef } from "vue";
-import VuePincher from "../lib/VuePincher.vue";
+import VuePincher from "../lib/vue-pincher.vue";
 import type { Region } from "../lib/crop";
 
 const settings = ref({

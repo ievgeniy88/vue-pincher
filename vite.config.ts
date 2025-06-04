@@ -1,4 +1,4 @@
-import { resolve } from "path";
+import path from "path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
@@ -8,7 +8,7 @@ export default defineConfig({
   build: {
     copyPublicDir: false,
     lib: {
-      entry: resolve(__dirname, "lib/main.ts"),
+      entry: path.resolve(import.meta.dirname, "lib/main.ts"),
       name: "VuePincher",
       fileName: "vue-pincher",
       formats: ["es"],

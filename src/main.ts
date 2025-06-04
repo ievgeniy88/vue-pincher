@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import App from "./App.vue";
+import App from "./app.vue";
 import VuePincher from "../lib/main.ts";
 
 const app = createApp(App);

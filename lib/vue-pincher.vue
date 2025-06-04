@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { useTemplateRef, onMounted, onUnmounted, watch } from "vue";
 import { ImageManipulator } from "./manipulator";
-import { InputHandler } from "./input_handler";
+import { InputHandler } from "./input-handler";
 import type { Region } from "./crop";
 
 const {

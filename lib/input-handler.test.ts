@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { InputHandler } from "./input_handler";
+import { InputHandler } from "./input-handler";
 import type { ImageManipulator } from "./manipulator";
 
 const mockManipulator = () => ({
@@ -122,10 +123,6 @@ describe("InputHandler", () => {
     });
 
     it("should handle multi-touch manipulation correctly", () => {
-      const getRect = () => {
-        return { x: 0, y: 0, width: 500, height: 500 };
-      };
-
       const touchDownEvent = {
         touches: [
           new Touch({
@@ -182,3 +179,7 @@ describe("InputHandler", () => {
     });
   });
 });
+
+function getRect() {
+  return { x: 0, y: 0, width: 500, height: 500 };
+}

@@ -1,3 +1,1 @@
-import VuePincher from "./VuePincher.vue";
-
-export default VuePincher;
+export { default } from "./vue-pincher.vue";
