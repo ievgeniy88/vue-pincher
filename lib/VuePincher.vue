@@ -160,11 +160,8 @@ function mouseUp() {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(
-      to right,
-      rgb(235, 235, 235) 1px,
-      transparent 1px
-    ),
+  background-image:
+    linear-gradient(to right, rgb(235, 235, 235) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(235, 235, 235) 1px, transparent 1px);
   background-size: calc(100% / 6) calc(100% / 6);
 }

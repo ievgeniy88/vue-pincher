@@ -68,7 +68,7 @@ export class ImageManipulator {
 
   // TODO: Implement using of trimming and attention simultaneously
   public reset() {
-    nextTick(() => {
+    void nextTick(() => {
       if (this._trimTo) {
         this.showRegion(this._trimTo, true);
       } else if (this._attention && this._attention.length > 0) {
@@ -108,10 +108,7 @@ export class ImageManipulator {
     let changed = false;
 
     if (data.angle !== undefined || data.dAngle !== undefined) {
-      const newAngle =
-        data.angle !== undefined
-          ? data.angle
-          : this._state.angle + (data.dAngle ?? 0);
+      const newAngle = data.angle ?? this._state.angle + (data.dAngle ?? 0);
 
       const angle = coerceAngle(newAngle);
 
@@ -147,10 +144,7 @@ export class ImageManipulator {
           this.canvasWidth / rotatedWidth,
           this.canvasHeight / rotatedHeight,
         );
-        const newScale =
-          data.scale !== undefined
-            ? data.scale
-            : this._state.scale * (data.dScale ?? 1);
+        const newScale = data.scale ?? this._state.scale * (data.dScale ?? 1);
 
         const scale = Math.max(minScale, newScale);
 
@@ -165,10 +159,8 @@ export class ImageManipulator {
       if (scaleChanged) {
         const scaleRatio = this._state.scale / previousScale;
 
-        const centerX =
-          data.centerX !== undefined ? data.centerX : this.canvasWidth / 2;
-        const centerY =
-          data.centerY !== undefined ? data.centerY : this.canvasHeight / 2;
+        const centerX = data.centerX ?? this.canvasWidth / 2;
+        const centerY = data.centerY ?? this.canvasHeight / 2;
 
         const imageX =
           this.canvasWidth / 2 + this._state.offsetX * this.canvasWidth;
@@ -189,9 +181,8 @@ export class ImageManipulator {
         data.dOffsetX !== undefined
       ) {
         const offset =
-          data.offsetX !== undefined
-            ? data.offsetX
-            : this._state.offsetX + (data.dOffsetX ?? 0) / this.clientWidth;
+          data.offsetX ??
+          this._state.offsetX + (data.dOffsetX ?? 0) / this.clientWidth;
 
         const limit =
           Math.abs(this.canvasWidth - rotatedWidth * this._state.scale) /
@@ -213,9 +204,8 @@ export class ImageManipulator {
         data.dOffsetY !== undefined
       ) {
         const offset =
-          data.offsetY !== undefined
-            ? data.offsetY
-            : this._state.offsetY + (data.dOffsetY ?? 0) / this.clientHeight;
+          data.offsetY ??
+          this._state.offsetY + (data.dOffsetY ?? 0) / this.clientHeight;
 
         const limit =
           Math.abs(this.canvasHeight - rotatedHeight * this._state.scale) /

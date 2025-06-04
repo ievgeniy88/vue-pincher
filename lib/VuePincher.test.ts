@@ -1,12 +1,12 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import PanAndZoom from "./VuePincher.vue";
+import VuePincher from "./VuePincher.vue";
 
-describe("PanAndZoom component", () => {
+describe("VuePincher component", () => {
   let wrapper: ReturnType<typeof mount>;
 
   beforeEach(() => {
-    wrapper = mount(PanAndZoom, {
+    wrapper = mount(VuePincher, {
       props: {
         image: { width: 100, height: 100, close: vi.fn() },
         readonly: false,
