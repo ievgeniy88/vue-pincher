@@ -2,10 +2,10 @@
   <div
     class="fit"
     style="position: relative"
-    @mousedown="handler?.mouseDown"
-    @touchstart="handler?.touchDown"
-    @wheel="handler?.wheel"
-    @dblclick="handler?.dblclick"
+    @mousedown="mouseDown"
+    @touchstart="touchDown"
+    @wheel="wheel"
+    @dblclick="dblclick"
   >
     <canvas ref="canvasRef" class="fit" />
     <Transition>
@@ -94,15 +94,35 @@ watch(
   (value) => (manipulator.attention = value),
 );
 
-watch(settings, (value) => (manipulator.state = value), {
-  deep: true,
-});
+watch(settings, (value) => (manipulator.state = value));
+
+watch(
+  () => [
+    settings.value.angle,
+    settings.value.offsetX,
+    settings.value.offsetY,
+    settings.value.scale,
+  ],
+
+  ([angle, offsetX, offsetY, scale]) => {
+    manipulator.state = {
+      angle: angle ?? 0,
+      offsetX: offsetX ?? 0,
+      offsetY: offsetY ?? 0,
+      scale: scale ?? 1,
+    };
+  },
+);
 
 /**
  * Resets image view to default state.
+ * @param lazy If true, the reset will be requested but not performed immediately.
+ * This is useful for performance optimization when multiple manipulations are performed in a short time.
+ * The reset will be performed on the next resize event.
+ * If false, the reset will be performed immediately.
  */
-function reset() {
-  manipulator.reset();
+function reset(lazy = false) {
+  manipulator.reset(lazy);
 }
 
 function rotate(delta: number) {
@@ -135,6 +155,10 @@ if (!readonly) {
   });
 }
 
+function touchDown(event: TouchEvent) {
+  handler?.touchDown(event);
+}
+
 function touchMoving(event: TouchEvent) {
   handler?.touchMoving(event);
 }
@@ -143,12 +167,24 @@ function touchUp() {
   handler?.touchUp();
 }
 
+function mouseDown(event: MouseEvent) {
+  handler?.mouseDown(event);
+}
+
 function mouseMoving(event: MouseEvent) {
   handler?.mouseMoving(event);
 }
 
 function mouseUp() {
   handler?.mouseUp();
+}
+
+function wheel(event: WheelEvent) {
+  handler?.wheel(event);
+}
+
+function dblclick() {
+  handler?.dblclick();
 }
 </script>
 

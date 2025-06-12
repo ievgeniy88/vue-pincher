@@ -44,7 +44,11 @@ export class InputHandler {
   public touchMoving(evt: TouchEvent) {
     if (!this.manipulating) return;
 
-    if (evt.touches && evt.touches.length === 1) {
+    if (
+      evt.touches?.[0] &&
+      this.previousTouch.touches?.[0] &&
+      evt.touches.length === 1
+    ) {
       const dx = evt.touches[0].clientX - this.previousTouch.touches[0].clientX;
       const dy = evt.touches[0].clientY - this.previousTouch.touches[0].clientY;
       this.manipulator.manipulate({

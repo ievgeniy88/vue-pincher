@@ -495,6 +495,14 @@ describe("convertDegreeToRadian function", () => {
 describe("getMidPoint function", () => {
   it.each([
     {
+      touches: [{ clientX: 0, clientY: 0 }],
+      expected: { x: 0, y: 0 },
+    },
+    {
+      touches: [{ clientX: 10, clientY: 10 }],
+      expected: { x: 10, y: 10 },
+    },
+    {
       touches: [
         { clientX: 0, clientY: 0 },
         { clientX: 0, clientY: 0 },
@@ -604,6 +612,38 @@ describe("getDistance function", () => {
       expect(getDistance(event)).toBeCloseTo(expectedDistance);
     },
   );
+});
+
+describe("getDistance error handling", () => {
+  it.each([
+    {
+      touches: [{ clientX: 0, clientY: 0 }],
+    },
+    {
+      touches: [],
+    },
+  ])("should throw an error if $description are provided", ({ touches }) => {
+    const event = createTouchEvent(touches);
+    expect(() => getDistance(event)).toThrowError(
+      "getDistance requires at least two touches",
+    );
+  });
+});
+
+describe("coerceAngle edge cases", () => {
+  it("should handle very large positive and negative angles", () => {
+    expect(coerceAngle(1e6)).toBeCloseTo(-80);
+    expect(coerceAngle(-1e6)).toBeCloseTo(80);
+  });
+});
+
+describe("getMidPoint edge cases", () => {
+  it("should return NaN for empty touches", () => {
+    const event = createTouchEvent([]);
+    const result = getMidPoint(event);
+    expect(result.x).toBeNaN();
+    expect(result.y).toBeNaN();
+  });
 });
 
 function createTouchEvent(

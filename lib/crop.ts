@@ -55,12 +55,12 @@ export function convertDegreeToRadian(rotate: number) {
 export function getMidPoint(evt: TouchEvent) {
   let totalX = 0;
   let totalY = 0;
-  const touchCount = evt.touches.length;
-
-  for (let i = 0; i < touchCount; i++) {
-    totalX += evt.touches[i].clientX;
-    totalY += evt.touches[i].clientY;
+  for (const touch of evt.touches) {
+    totalX += touch.clientX;
+    totalY += touch.clientY;
   }
+
+  const touchCount = evt.touches.length;
 
   const midX = totalX / touchCount;
   const midY = totalY / touchCount;
@@ -69,6 +69,10 @@ export function getMidPoint(evt: TouchEvent) {
 }
 
 export function getDistance(evt: TouchEvent) {
+  if (!evt.touches?.[0] || !evt.touches?.[1]) {
+    throw new Error("getDistance requires at least two touches");
+  }
+
   const touch1 = evt.touches[0];
   const touch2 = evt.touches[1];
 

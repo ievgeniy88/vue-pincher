@@ -1,4 +1,3 @@
-import { nextTick } from "vue";
 import type { Region } from "./crop";
 import {
   coerceAngle,
@@ -9,7 +8,8 @@ import {
 } from "./crop";
 
 export class ImageManipulator {
-  private resizeObserver: ResizeObserver;
+  private readonly resizeObserver: ResizeObserver;
+  private resetRequested = false;
 
   // Actual width and height of the canvas
   private clientWidth = 0;
@@ -24,7 +24,7 @@ export class ImageManipulator {
   private fitHeight = 0;
 
   constructor(
-    private _ctx: CanvasRenderingContext2D,
+    private readonly _ctx: CanvasRenderingContext2D,
     private _image: ImageBitmap,
     private _state: State,
     private _trimTo?: Region,
@@ -37,7 +37,12 @@ export class ImageManipulator {
 
       this.adjustSize();
 
-      this.redraw();
+      if (this.resetRequested) {
+        this.resetRequested = false;
+        this.reset();
+      } else {
+        this.redraw();
+      }
     });
     this.resizeObserver.observe(_ctx.canvas);
 
@@ -67,38 +72,48 @@ export class ImageManipulator {
   }
 
   // TODO: Implement using of trimming and attention simultaneously
-  public reset() {
-    void nextTick(() => {
-      if (this._trimTo) {
-        this.showRegion(this._trimTo, true);
-      } else if (this._attention && this._attention.length > 0) {
-        this.showRegion(
-          // TODO: Implement using of multiple attentions
-          applyAttention(
-            this._attention[0],
-            this._image,
-            { width: this.canvasWidth, height: this.canvasHeight },
-            false,
-          ),
-        );
-      } else {
-        const radian = convertDegreeToRadian(this._state.angle);
-        const absCos = Math.abs(Math.cos(radian));
-        const absSin = Math.abs(Math.sin(radian));
+  /**
+   * Resets manipulator to default state.
+   * @param lazy If true, the reset will be requested but not performed immediately.
+   * This is useful for performance optimization when multiple manipulations are performed in a short time.
+   * The reset will be performed on the next resize event.
+   * If false, the reset will be performed immediately.
+   */
+  public reset(lazy = false) {
+    if (lazy) {
+      this.resetRequested = true;
+      return;
+    }
 
-        const rotatedWidth = this.fitWidth * absCos + this.fitHeight * absSin;
-        const rotatedHeight = this.fitHeight * absCos + this.fitWidth * absSin;
+    if (this._trimTo) {
+      this.showRegion(this._trimTo, true);
+    } else if (this._attention?.[0]) {
+      this.showRegion(
+        // TODO: Implement using of multiple attentions
+        applyAttention(
+          this._attention[0],
+          this._image,
+          { width: this.canvasWidth, height: this.canvasHeight },
+          false,
+        ),
+      );
+    } else {
+      const radian = convertDegreeToRadian(this._state.angle);
+      const absCos = Math.abs(Math.cos(radian));
+      const absSin = Math.abs(Math.sin(radian));
 
-        this.manipulate({
-          scale: fill(
-            { width: rotatedWidth, height: rotatedHeight },
-            { width: this.canvasWidth, height: this.canvasHeight },
-          ),
-          offsetX: 0,
-          offsetY: 0,
-        });
-      }
-    });
+      const rotatedWidth = this.fitWidth * absCos + this.fitHeight * absSin;
+      const rotatedHeight = this.fitHeight * absCos + this.fitWidth * absSin;
+
+      this.manipulate({
+        scale: fill(
+          { width: rotatedWidth, height: rotatedHeight },
+          { width: this.canvasWidth, height: this.canvasHeight },
+        ),
+        offsetX: 0,
+        offsetY: 0,
+      });
+    }
   }
 
   public manipulate(data: Manipulation) {
