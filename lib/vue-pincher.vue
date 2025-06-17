@@ -103,15 +103,7 @@ watch(
     settings.value.offsetY,
     settings.value.scale,
   ],
-
-  ([angle, offsetX, offsetY, scale]) => {
-    manipulator.state = {
-      angle: angle ?? 0,
-      offsetX: offsetX ?? 0,
-      offsetY: offsetY ?? 0,
-      scale: scale ?? 1,
-    };
-  },
+  () => manipulator.redraw(),
 );
 
 /**

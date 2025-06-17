@@ -293,28 +293,7 @@ export class ImageManipulator {
     this.resizeObserver.disconnect();
   }
 
-  private adjustSize() {
-    if (!this._ctx) return;
-
-    this.clientWidth = this._ctx.canvas.clientWidth;
-    this.clientHeight = this._ctx.canvas.clientHeight;
-
-    this.canvasWidth = this._ctx.canvas.width =
-      this.clientWidth * window.devicePixelRatio;
-    this.canvasHeight = this._ctx.canvas.height =
-      this.clientHeight * window.devicePixelRatio;
-
-    // fit image into canvas
-    const f = fit(this._image, {
-      width: this.canvasWidth,
-      height: this.canvasHeight,
-    });
-
-    this.fitWidth = this._image.width * f;
-    this.fitHeight = this._image.height * f;
-  }
-
-  private redraw() {
+  public redraw() {
     if (!this._ctx) return;
 
     const scale = this._state.scale;
@@ -345,6 +324,27 @@ export class ImageManipulator {
       scaledHeight,
     );
     this._ctx.restore();
+  }
+
+  private adjustSize() {
+    if (!this._ctx) return;
+
+    this.clientWidth = this._ctx.canvas.clientWidth;
+    this.clientHeight = this._ctx.canvas.clientHeight;
+
+    this.canvasWidth = this._ctx.canvas.width =
+      this.clientWidth * window.devicePixelRatio;
+    this.canvasHeight = this._ctx.canvas.height =
+      this.clientHeight * window.devicePixelRatio;
+
+    // fit image into canvas
+    const f = fit(this._image, {
+      width: this.canvasWidth,
+      height: this.canvasHeight,
+    });
+
+    this.fitWidth = this._image.width * f;
+    this.fitHeight = this._image.height * f;
   }
 }
 
