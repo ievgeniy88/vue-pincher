@@ -17,11 +17,11 @@ export class InputHandler {
   }
 
   private manipulating = false;
-  private previousClick: MouseEvent = new MouseEvent("click");
-  private previousTouch: TouchEvent = new TouchEvent("touchstart");
+  private previousClick: MouseEvent | null = null;
+  private previousTouch: TouchEvent | null = null;
 
   public mouseMoving(evt: MouseEvent) {
-    if (this.manipulating) {
+    if (this.manipulating && this.previousClick) {
       const dx = evt.clientX - this.previousClick.x;
       const dy = evt.clientY - this.previousClick.y;
       this.mouseDown(evt);
@@ -46,7 +46,7 @@ export class InputHandler {
 
     if (
       evt.touches?.[0] &&
-      this.previousTouch.touches?.[0] &&
+      this.previousTouch?.touches?.[0] &&
       evt.touches.length === 1
     ) {
       const dx = evt.touches[0].clientX - this.previousTouch.touches[0].clientX;
@@ -56,8 +56,8 @@ export class InputHandler {
         dOffsetY: dy,
       });
       this.previousTouch = evt;
-    } else if (evt.touches && evt.touches.length >= 2) {
-      if (this.previousTouch.touches.length >= 2) {
+    } else if (evt.touches && evt.touches.length >= 2 && this.previousTouch) {
+      if (this.previousTouch?.touches.length >= 2) {
         const start = getMidPoint(this.previousTouch);
         const current = getMidPoint(evt);
 
