@@ -9,7 +9,7 @@ import prettier from "eslint-plugin-prettier/recommended";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 
 export default defineConfig([
-  globalIgnores(["node_modules/", "dist/"]),
+  globalIgnores(["node_modules/", "dist/", "coverage/"]),
   { files: ["**/*.{js,mjs,cjs,ts,vue}"] },
   {
     files: ["**/*.{js,mjs,cjs,ts,vue}"],
