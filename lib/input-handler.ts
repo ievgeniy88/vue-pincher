@@ -17,14 +17,14 @@ export class InputHandler {
   }
 
   private manipulating = false;
-  private previousClick: MouseEvent = new MouseEvent("click");
-  private previousTouch: TouchEvent = new TouchEvent("touchstart");
+  private previousClick: MouseEvent | null = null;
+  private previousTouch: TouchEvent | null = null;
 
   public mouseMoving(evt: MouseEvent) {
-    if (this.manipulating) {
+    if (this.manipulating && this.previousClick) {
       const dx = evt.clientX - this.previousClick.x;
       const dy = evt.clientY - this.previousClick.y;
-      this.mouseDown(evt);
+      this.previousClick = evt;
       this.manipulator.manipulate({
         dOffsetX: dx,
         dOffsetY: dy,
@@ -46,7 +46,7 @@ export class InputHandler {
 
     if (
       evt.touches?.[0] &&
-      this.previousTouch.touches?.[0] &&
+      this.previousTouch?.touches?.[0] &&
       evt.touches.length === 1
     ) {
       const dx = evt.touches[0].clientX - this.previousTouch.touches[0].clientX;
@@ -55,27 +55,30 @@ export class InputHandler {
         dOffsetX: dx,
         dOffsetY: dy,
       });
-      this.previousTouch = evt;
-    } else if (evt.touches && evt.touches.length >= 2) {
-      if (this.previousTouch.touches.length >= 2) {
-        const start = getMidPoint(this.previousTouch);
-        const current = getMidPoint(evt);
+    } else if (
+      evt.touches &&
+      evt.touches.length >= 2 &&
+      this.previousTouch &&
+      this.previousTouch.touches.length >= 2
+    ) {
+      const start = getMidPoint(this.previousTouch);
+      const current = getMidPoint(evt);
 
-        const rect = (evt.target as HTMLElement).getBoundingClientRect();
-        const x = current.x - rect.x;
-        const y = current.y - rect.y;
+      const rect = (evt.target as HTMLElement).getBoundingClientRect();
+      const x = current.x - rect.x;
+      const y = current.y - rect.y;
 
-        this.manipulator.manipulate({
-          dScale: getDistance(evt) / getDistance(this.previousTouch),
-          dOffsetX: current.x - start.x,
-          dOffsetY: current.y - start.y,
-          centerX: x * window.devicePixelRatio,
-          centerY: y * window.devicePixelRatio,
-        });
-      }
+      this.manipulator.manipulate({
+        dScale: getDistance(evt) / getDistance(this.previousTouch),
+        dOffsetX: current.x - start.x,
+        dOffsetY: current.y - start.y,
+        centerX: x * window.devicePixelRatio,
+        centerY: y * window.devicePixelRatio,
+      });
+    }
+
+    if (evt.touches) {
       this.previousTouch = evt;
-    } else {
-      // It's mousemove click event
     }
 
     evt.preventDefault();

@@ -47,6 +47,7 @@
   "scripts": {
     "start": "vite",
     "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix",
     "build": "vite build && vue-tsc -p tsconfig.lib.json",
     "prepublishOnly": "npm run build",
     "test": "vitest run --coverage",
