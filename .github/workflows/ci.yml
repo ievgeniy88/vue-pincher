@@ -5,6 +5,12 @@ on:
     branches: [main]
   pull_request: # and for every PR targeting main
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'npm tag (e.g., latest, beta)'
+        required: true
+        default: 'latest'
 
 jobs:
   # 1️⃣ Lint
