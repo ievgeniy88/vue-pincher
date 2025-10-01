@@ -35,14 +35,16 @@ export class ImageManipulator {
     this.resizeObserver = new ResizeObserver(() => {
       if (!_ctx) return;
 
-      this.adjustSize();
+      requestAnimationFrame(() => {
+        this.adjustSize();
 
-      if (this.resetRequested) {
-        this.resetRequested = false;
-        this.reset();
-      } else {
-        this.redraw();
-      }
+        if (this.resetRequested) {
+          this.resetRequested = false;
+          this.reset();
+        } else {
+          this.redraw();
+        }
+      });
     });
     this.resizeObserver.observe(_ctx.canvas);
 
