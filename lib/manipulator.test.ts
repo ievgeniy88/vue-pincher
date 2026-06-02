@@ -37,7 +37,7 @@ describe("Image manipulator", () => {
       width: 800,
       height: 600,
       close: vi.fn(),
-    } as unknown as ImageBitmap;
+    };
 
     state = { angle: 0, offsetX: 0, offsetY: 0, scale: 0 };
     trimTo = undefined;
@@ -113,7 +113,7 @@ describe("Image manipulator", () => {
       width: 800,
       height: 600,
       close: vi.fn(),
-    } as unknown as ImageBitmap; // Assume a valid ImageBitmap instance
+    }; // Assume a valid ImageBitmap instance
 
     expect(ctx.drawImage).toHaveBeenCalledWith(
       expect.any(Object),
