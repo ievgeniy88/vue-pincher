@@ -48,6 +48,7 @@
     "start": "vite",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",
+    "typecheck": "vue-tsc --noEmit",
     "build": "vite build && vue-tsc -p tsconfig.lib.json",
     "prepublishOnly": "npm run build",
     "test": "vitest run --coverage",
