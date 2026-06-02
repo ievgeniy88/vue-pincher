@@ -4,12 +4,30 @@ import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import vue from "eslint-plugin-vue";
 import vueTsEslintConfig from "@vue/eslint-config-typescript";
-import json from "eslint-plugin-json";
+import json from "@eslint/json";
 import prettier from "eslint-plugin-prettier/recommended";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 
+const vueRulesOffForJson = Object.fromEntries(
+  Object.keys(vue.rules).map((ruleName) => [`vue/${ruleName}`, "off"]),
+);
+
+const unicornRulesOffForJson = Object.fromEntries(
+  Object.keys(eslintPluginUnicorn.rules).map((ruleName) => [
+    `unicorn/${ruleName}`,
+    "off",
+  ]),
+);
+
+const typescriptEslintRulesOffForJson = Object.fromEntries(
+  Object.keys(tseslint.plugin.rules).map((ruleName) => [
+    `@typescript-eslint/${ruleName}`,
+    "off",
+  ]),
+);
+
 export default defineConfig([
-  globalIgnores(["node_modules/", "dist/", "coverage/"]),
+  globalIgnores(["node_modules/", "dist/", "coverage/", "package-lock.json"]),
   { files: ["**/*.{js,mjs,cjs,ts,vue}"] },
   {
     files: ["**/*.{js,mjs,cjs,ts,vue}"],
@@ -107,10 +125,22 @@ export default defineConfig([
     extends: [tseslint.configs.disableTypeChecked],
   },
   {
-    files: ["**/*.json"],
-    ...json.configs["recommended"],
+    files: ["**/*.{json,jsonc,json5}"],
     rules: {
-      "json/*": ["error", { allowComments: true }],
+      ...vueRulesOffForJson,
+      ...unicornRulesOffForJson,
+      ...typescriptEslintRulesOffForJson,
     },
+  },
+  {
+    files: ["**/*.json"],
+    ignores: [".vscode/**/*.json", "**/tsconfig.json", "**/tsconfig.*.json"],
+    ...json.configs.recommended,
+    language: "json/json",
+  },
+  {
+    files: [".vscode/**/*.json", "**/tsconfig.json", "**/tsconfig.*.json"],
+    ...json.configs.recommended,
+    language: "json/jsonc",
   },
 ]);
