@@ -28,4 +28,4 @@ All commands are defined in `package.json` scripts:
 - The pre-commit hook (`.husky/pre-commit`) runs `npm run lint`, `npm run typecheck`, and `npm run test` before every commit. All must pass.
 - Tests use `happy-dom` as the DOM environment — no browser required for automated tests.
 - No databases, Docker, or external services are needed. The project is entirely client-side.
-- Node 22.x is the primary CI version; Node 20.x is also tested.
+- Node 26.x is the primary CI version (matches `@types/node`); Node 24.x is also tested.

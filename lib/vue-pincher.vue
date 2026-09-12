@@ -47,7 +47,7 @@ const settings = defineModel<{
   offsetY: number;
   scale: number;
 }>({
-  default: { angle: 0, offsetX: 0, offsetY: 0, scale: 0 },
+  default: () => ({ angle: 0, offsetX: 0, offsetY: 0, scale: 0 }),
 });
 
 const canvas = useTemplateRef("canvasRef");
