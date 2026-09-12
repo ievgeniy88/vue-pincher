@@ -118,6 +118,15 @@ export default defineConfig([
       "unicorn/no-useless-undefined": "off",
       "unicorn/numeric-separators-style": "off",
       "unicorn/prefer-node-protocol": "off",
+      // New in unicorn 74: would rename public APIs and force a style rewrite
+      "unicorn/consistent-boolean-name": "off",
+      "unicorn/consistent-class-member-order": "off",
+      "unicorn/consistent-compound-words": "off",
+      "unicorn/name-replacements": "off",
+      "unicorn/no-top-level-assignment-in-function": "off",
+      "unicorn/no-useless-else": "off",
+      "unicorn/prefer-early-return": "off",
+      "unicorn/prefer-minimal-ternary": "off",
     },
   },
   {
