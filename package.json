@@ -61,7 +61,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@eslint/json": "^2.1.0",
-    "@types/node": "^25.9.6",
+    "@types/node": "^26.5.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitest/coverage-v8": "^5.0.0",
     "@vue/eslint-config-typescript": "^14.9.0",
@@ -82,5 +82,8 @@
     "vitest": "^5.0.0",
     "vue": "^3.5.42",
     "vue-tsc": "^3.3.11"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true
   }
 }
